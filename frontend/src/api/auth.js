@@ -1,10 +1,8 @@
 import axios from "axios";
 
-const API = "http://localhost:3001/api/auth";
-
-// ⚠️ QUAN TRỌNG: withCredentials = true
+// ⚠️ KHÔNG dùng localhost khi deploy
 const client = axios.create({
-    baseURL: API,
+    baseURL: "/api/auth",
     withCredentials: true
 });
 
