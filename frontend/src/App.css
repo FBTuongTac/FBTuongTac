@@ -1,0 +1,157 @@
+/* RESET CƠ BẢN */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* BODY & HTML */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
+  background: #f5f7fb;
+}
+
+/* ROOT – QUAN TRỌNG */
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+/* ===== DÙNG CHO LOGIN / REGISTER ===== */
+.auth-page {
+  width: 100vw;
+  height: 100vh;
+  background: #f5f7fb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* 🔥 FIX LỖI LỘ CARD / KÉO DÀI */
+}
+
+/* ===== CARD LOGIN / REGISTER ===== */
+.auth-card {
+  width: 420px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+/* HEADER */
+.auth-header {
+  background: #dbe3ff;
+  padding: 22px;
+  text-align: center;
+}
+
+.auth-header h2 {
+  margin: 0;
+  color: #4f46e5;
+  font-size: 22px;
+}
+
+.auth-header p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* FORM BODY */
+.auth-form {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-form label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 16px;
+  outline: none;
+  font-size: 14px;
+}
+
+.auth-form input:focus {
+  border-color: #4f46e5;
+}
+
+/* PASSWORD */
+.password-box {
+  position: relative;
+}
+
+.password-box span {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* REMEMBER */
+.remember {
+  font-size: 13px;
+  margin-bottom: 14px;
+  color: #444;
+}
+
+/* BUTTON */
+.auth-form button {
+  padding: 12px;
+  background: #5b6ee1;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.auth-form button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ERROR */
+.error {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+/* SWITCH LOGIN / REGISTER */
+.switch {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.switch span {
+  color: #4f46e5;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* ===== RESPONSIVE MOBILE ===== */
+@media (max-width: 480px) {
+  .auth-card {
+    width: 90%;
+  }
+}

@@ -1,0 +1,140 @@
+/* =====================
+   NAVBAR CONTAINER
+===================== */
+.navbar {
+    height: 60px;
+    background: linear-gradient(90deg, #4f6bed, #5b7cfa);
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    font-size: 14px;
+}
+
+/* =====================
+   LEFT
+===================== */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.nav-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.nav-item {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 4px;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* =====================
+   RIGHT
+===================== */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+/* Thống kê nhanh */
+.stat-box {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-align: right;
+}
+
+.stat-label {
+    display: block;
+    font-size: 11px;
+    opacity: 0.8;
+}
+
+.stat-value {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+/* User */
+.user-box {
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+.user-box:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* =====================
+   DROPDOWN
+===================== */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 120%;
+    left: 0;
+    background: #fff;
+    color: #333;
+    min-width: 200px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: none;
+    flex-direction: column;
+    z-index: 999;
+    overflow: hidden;
+}
+
+.dropdown-menu.right {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu a,
+.dropdown-menu span {
+    padding: 10px 14px;
+    text-decoration: none;
+    color: #333;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu span:hover {
+    background: #f3f5ff;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: flex;
+}
+
+.logout {
+    color: #e74c3c;
+    font-weight: 600;
+}
+.admin-item {
+    font-weight: 600;
+    background: rgba(255, 215, 0, 0.15);
+    border-radius: 6px;
+}
