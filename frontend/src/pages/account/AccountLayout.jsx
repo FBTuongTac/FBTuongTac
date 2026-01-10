@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import "./Account.css";
 
-const API = "http://localhost:3001/api";
+const API = import.meta.env.VITE_API_URL || "/api";
 const DAY_24H = 24 * 60 * 60 * 1000;
 
 export default function AccountLayout() {
