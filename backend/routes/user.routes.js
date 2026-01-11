@@ -1,11 +1,9 @@
-const express = require("express");
-const router = express.Router();
-
-const authMiddleware = require("../middleware/auth.middleware");
+const router = require("express").Router();
+const auth = require("../middleware/auth.middleware");
 const ctrl = require("../controllers/user.controller");
 
-router.get("/account/overview", authMiddleware, ctrl.accountOverview);
-router.get("/account/api-key", authMiddleware, ctrl.getApiKey);
-router.post("/account/api-key/reset", authMiddleware, ctrl.resetApiKey);
+router.get("/account/overview", auth, ctrl.accountOverview);
+router.get("/account/api-key", auth, ctrl.getApiKey);
+router.post("/account/api-key/reset", auth, ctrl.resetApiKey);
 
 module.exports = router;
