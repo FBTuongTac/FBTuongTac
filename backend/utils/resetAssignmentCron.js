@@ -1,19 +1,29 @@
 const cron = require('node-cron');
 const db = require('../config/db');
 
-/*
-  Chạy mỗi 1 phút
-  - KHÔNG DELETE assignment
-  - Chỉ reset assignment treo an toàn
-*/
+async function tableExists(tableName) {
+  const [rows] = await db.execute(`
+    SELECT COUNT(*) AS cnt
+    FROM information_schema.tables
+    WHERE table_schema = DATABASE()
+      AND table_name = ?
+  `, [tableName]);
+
+  return rows[0].cnt > 0;
+}
+
 cron.schedule('* * * * *', async () => {
   try {
 
-    /* =====================
-       1️⃣ RESET ASSIGNMENT TREO (AN TOÀN)
-       - chỉ reset khi chưa chạy gì
-       - timeout 5 phút
-    ===================== */
+    const hasAssignmentTable = await tableExists('job_assignments');
+    const hasJobsTable = await tableExists('jobs');
+
+    if (!hasAssignmentTable || !hasJobsTable) {
+      // ❗ im lặng – không log
+      return;
+    }
+
+    /* 1️⃣ RESET ASSIGNMENT TREO */
     const [assignRs] = await db.execute(`
       UPDATE job_assignments
       SET status = 'rejected'
@@ -26,18 +36,16 @@ cron.schedule('* * * * *', async () => {
       console.log(`♻️ Reset ${assignRs.affectedRows} assignment timeout`);
     }
 
-    /* =====================
-       2️⃣ RESET JOB RUNNING MỒ CÔI
-    ===================== */
+    /* 2️⃣ RESET JOB RUNNING MỒ CÔI */
     const [jobRs] = await db.execute(`
       UPDATE jobs j
       SET j.status = 'pending'
       WHERE j.status = 'running'
         AND NOT EXISTS (
-            SELECT 1
-            FROM job_assignments ja
-            WHERE ja.job_id = j.id
-              AND ja.status = 'assigned'
+          SELECT 1
+          FROM job_assignments ja
+          WHERE ja.job_id = j.id
+            AND ja.status = 'assigned'
         )
     `);
 
@@ -46,6 +54,6 @@ cron.schedule('* * * * *', async () => {
     }
 
   } catch (e) {
-    console.error('❌ Cron reset error:', e);
+    console.error('❌ Cron reset error:', e.message);
   }
 });

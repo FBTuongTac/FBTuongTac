@@ -9,61 +9,76 @@ exports.register = async (req, res) => {
     try {
         const { username, password, email } = req.body;
 
-        if (!username || !password)
+        if (!username || !password) {
             return res.status(400).json({ msg: 'Thiếu dữ liệu' });
+        }
 
         const [exist] = await db.execute(
-            'SELECT id FROM users WHERE username=? OR email=?',
-            [username, email]
+            'SELECT id FROM users WHERE username=?',
+            [username]
         );
 
-        if (exist.length)
+        if (exist.length) {
             return res.status(400).json({ msg: 'Tài khoản đã tồn tại' });
+        }
 
         const hash = await bcrypt.hash(password, 10);
 
         await db.execute(
-            'INSERT INTO users (username,password,email,role) VALUES (?,?,?,?)',
-            [username, hash, email, 'buyer']
+            'INSERT INTO users (username,password,email,role,status,balance) VALUES (?,?,?,?,?,?)',
+            [username, hash, email || null, 'buyer', 1, 0]
         );
 
         res.json({ msg: 'Đăng ký thành công' });
-    } catch (e) {
-        res.status(500).json({ msg: 'Lỗi server' });
+    } catch (err) {
+        console.error('REGISTER ERROR:', err);
+        res.status(500).json({
+            msg: 'Lỗi server',
+            error: err.message
+        });
     }
 };
 
 /* =====================
-   LOGIN (LƯU COOKIE)
+   LOGIN (SET COOKIE)
 ===================== */
 exports.login = async (req, res) => {
     try {
         const { username, password } = req.body;
 
+        if (!username || !password) {
+            return res.status(400).json({ msg: 'Thiếu dữ liệu' });
+        }
+
+        // ✅ QUERY AN TOÀN – KHÔNG GÂY CRASH
         const [[user]] = await db.execute(
-            'SELECT * FROM users WHERE username=? OR email=?',
-            [username, username]
+            'SELECT * FROM users WHERE username=?',
+            [username]
         );
 
-        if (!user)
+        if (!user) {
             return res.status(400).json({ msg: 'Sai tài khoản' });
+        }
 
-        if (user.status !== 1)
+        if (user.status !== 1) {
             return res.status(403).json({ msg: 'Tài khoản bị khóa' });
+        }
 
         const ok = await bcrypt.compare(password, user.password);
-        if (!ok)
+        if (!ok) {
             return res.status(400).json({ msg: 'Sai mật khẩu' });
+        }
 
         const token = jwt.sign({
             id: user.id,
             role: user.role
         });
 
-        // 🍪 LƯU COOKIE
+        // 🍪 SET COOKIE (CHUẨN CHO HTTP + IP)
         res.cookie('token', token, {
             httpOnly: true,
             sameSite: 'lax',
+            secure: false,
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 ngày
         });
 
@@ -76,8 +91,12 @@ exports.login = async (req, res) => {
                 role: user.role
             }
         });
-    } catch {
-        res.status(500).json({ msg: 'Lỗi server' });
+    } catch (err) {
+        console.error('LOGIN ERROR:', err);
+        res.status(500).json({
+            msg: 'Lỗi server',
+            error: err.message
+        });
     }
 };
 
@@ -85,11 +104,28 @@ exports.login = async (req, res) => {
    ME (CHECK SESSION)
 ===================== */
 exports.me = async (req, res) => {
-    const [[user]] = await db.execute(
-        'SELECT id,username,balance,role FROM users WHERE id=?',
-        [req.user.id]
-    );
-    res.json(user);
+    try {
+        if (!req.user) {
+            return res.status(401).json({ msg: 'Unauthorized' });
+        }
+
+        const [[user]] = await db.execute(
+            'SELECT id,username,balance,role FROM users WHERE id=?',
+            [req.user.id]
+        );
+
+        if (!user) {
+            return res.status(401).json({ msg: 'Unauthorized' });
+        }
+
+        res.json(user);
+    } catch (err) {
+        console.error('ME ERROR:', err);
+        res.status(500).json({
+            msg: 'Lỗi server',
+            error: err.message
+        });
+    }
 };
 
 /* =====================
